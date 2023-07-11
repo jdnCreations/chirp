@@ -1,12 +1,14 @@
 import Head from "next/head";
-import Link from "next/link";
 import { api } from "~/utils/api";
 import { useAuth } from '@clerk/nextjs';
 import {SignIn, SignOutButton } from '@clerk/nextjs';
+import { type NextPage } from "next";
 
-export default function Home() {
-  const hello = api.example.hello.useQuery({ text: "from tRPC" });
+const Home: NextPage = () => {
+  
   const user = useAuth();
+
+  const { data } = api.posts.getAll.useQuery();
 
   return (
     <>
@@ -20,7 +22,12 @@ export default function Home() {
           {!user.isLoaded && <SignIn />}
           {!!user.isLoaded && <SignOutButton />}
         </div>
+        <div>
+          {data?.map((post) => (<div key={post.id}>{post.content}</div>))}
+        </div>
       </main>
     </>
   );
 }
+
+export default Home;
