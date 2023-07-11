@@ -3,6 +3,7 @@
 
 generator client {
   provider = "prisma-client-js"
+  previewFeatures = ["jsonProtocol"]
 }
 
 datasource db {
@@ -14,8 +15,8 @@ datasource db {
 model Post {
     id        String   @id @default(cuid())
     createdAt DateTime @default(now())
-    content   String @db.VarChar(255)
 
+    content   String @db.VarChar(255)
     authorId  String
 
     @@index([authorId])
