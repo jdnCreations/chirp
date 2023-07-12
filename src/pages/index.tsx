@@ -46,8 +46,8 @@ const CreatePostWizard = () => {
       onChange={(e) => setInput(e.target.value)}
       disabled={isPosting}
       />
-      <button onClick={() => mutate({ content: input})}>Post</button>
-    <button className="bg-blue-400 font-bold w-24 h-10 rounded-full">Chirp</button>
+    {/* <button onClick={() => mutate({ content: input})}>Post</button> */}
+    <button onClick={() => mutate({ content: input})} className="bg-blue-400 font-bold w-24 h-10 rounded-full self-center">Chirp</button>
   </div>
   );
 }
