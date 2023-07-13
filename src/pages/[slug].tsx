@@ -36,7 +36,7 @@ const ProfilePage: NextPage<{username: string}> = ({ username }) => {
   return (
     <>
       <Head>
-        <title>Chirp | {data.username}</title>
+        <title>{`Chirp | ${data.username ?? ""}`}</title>
       </Head>
       <PageLayout>
         <div className="h-36 border-slate-400 bg-slate-600 relative">

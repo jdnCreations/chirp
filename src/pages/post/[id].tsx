@@ -15,7 +15,7 @@ const SinglePostPage: NextPage<{id: string}> = ({ id }) => {
   return (
     <>
       <Head>
-        <title>Chirp | {`${data.post.content} - ${data.author.username}`}</title>
+        <title>{`Chirp | ${data.post.content} - ${data.author.username}`}</title>
       </Head>
       <PageLayout>
         <PostView {...data} />
