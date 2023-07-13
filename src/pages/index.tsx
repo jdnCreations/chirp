@@ -3,6 +3,7 @@ import { type RouterOutputs, api } from "~/utils/api";
 import { SignInButton, useUser } from '@clerk/nextjs';
 import {SignIn, SignOutButton } from '@clerk/nextjs';
 import { type NextPage } from "next";
+import toast from "react-hot-toast";
 
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
@@ -24,31 +25,58 @@ const CreatePostWizard = () => {
       setInput("");
       void ctx.posts.getAll.invalidate();
 
+    },
+    onError: (e) => {
+      const errorMessage = e.data?.zodError?.fieldErrors.content;
+      if (errorMessage && errorMessage[0]) {
+        toast.error(errorMessage[0])
+      } else {
+        toast.error("Failed to post! Please try again later.")
+      }
     }
   });
 
   if (!user) return null;
 
   return (
-  <div className="flex gap-4 w-full">
-    <Image 
-      src={user.profileImageUrl} 
-      alt="Profile Image"
-      width={56}
-      height={56}
-      className="rounded-full"
+    <div className="flex gap-4 w-full">
+      <Image 
+        src={user.profileImageUrl} 
+        alt="Profile Image"
+        width={56}
+        height={56}
+        className="rounded-full"
+        />
+      <input 
+        type="text" 
+        placeholder="Type some emojis!" 
+        className="bg-transparent grow outline-none"
+        value={input}
+        onChange={(e) => setInput(e.target.value)}
+        onKeyDown={(e) => {
+          if (e.key === "Enter") {
+            e.preventDefault();
+            if (input !== "") {
+              mutate({content: input});
+            }
+          }
+        }}
+        disabled={isPosting}
       />
-    <input 
-      type="text" 
-      placeholder="Type some emojis!" 
-      className="bg-transparent grow outline-none"
-      value={input}
-      onChange={(e) => setInput(e.target.value)}
-      disabled={isPosting}
-      />
-    {/* <button onClick={() => mutate({ content: input})}>Post</button> */}
-    <button onClick={() => mutate({ content: input})} className="bg-blue-400 font-bold w-24 h-10 rounded-full self-center">Chirp</button>
-  </div>
+    {input !== "" && !isPosting && ( 
+    <button 
+        onClick={() => mutate({ content: input})} 
+        className="bg-blue-400 font-bold w-24 h-10 rounded-full self-center">
+          Chirp
+      </button>)}
+
+      {isPosting && (
+        <div className="flex items-center justify-center">
+          <LoadingSpinner size={20}/>
+        </div>
+      )}
+
+    </div>
   );
 }
 
